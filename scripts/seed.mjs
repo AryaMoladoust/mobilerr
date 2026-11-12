@@ -20,6 +20,8 @@ for (const [cat, c] of Object.entries(CATS)) {
     docs.push({
       name: `${c.label} ${brand} مدل ${i + 1}`,
       slug: `${cat}-${i + 1}`,
+      sku: `${cat}-${i + 1}`.toUpperCase(),
+      minStock: 5,
       brand,
       category: cat,
       price,
@@ -35,7 +37,14 @@ for (const [cat, c] of Object.entries(CATS)) {
     });
   }
 }
-await mongoose.connect(process.env.MONGODB_URI, { dbName: 'mobiler' });
+if (!process.env.MONGODB_URI) { console.error('MONGODB_URI در .env.local تنظیم نشده است'); process.exit(1); }
+await mongoose.connect(process.env.MONGODB_URI, { dbName: 'mobiler', serverSelectionTimeoutMS: 8000 });
+const existing = await Product.countDocuments();
+if (existing > 0 && !process.argv.includes('--force')) {
+  console.log(`⚠ ${existing} محصول از قبل وجود دارد و چیزی تغییر نکرد. برای پاک‌کردن و ثبت مجدد: npm run seed -- --force`);
+  await mongoose.disconnect();
+  process.exit(0);
+}
 await Product.deleteMany({});
 await Product.insertMany(docs);
 console.log(`✔ ${docs.length} محصول ثبت شد`);
