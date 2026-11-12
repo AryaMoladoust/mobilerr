@@ -27,7 +27,7 @@ Next.js 15 (App Router) + MongoDB Atlas (Mongoose) + Tailwind (فروشگاه) �
 
 ## ساختار
 ```
-src/app/(shop)/        فروشگاه (Root Layout و CSS مخصوص خودش)
+src/app/(shop)/        فروشگاه؛ صفحه اصلی در shop/page.js و با rewrite روی / نمایش داده می‌شود
 src/app/(admin)/admin/ پنل مدیریت (Root Layout و CSS مخصوص خودش)
 src/app/api/           APIها
 src/admin/             کامپوننت‌ها و ترجمه‌ی پنل
